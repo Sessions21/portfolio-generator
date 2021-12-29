@@ -1,7 +1,7 @@
 const inquirer = require('inquirer');
 const { join } = require('path/posix');
-// const fs = require('fs');
-// const generatePage = require('./src/page-template.js');
+const fs = require('fs');
+const generatePage = require('./src/page-template.js');
 
 // const pageHTML = generatePage(name, github);
 
@@ -55,11 +55,6 @@ const promptUser = () => {
           return false;
         }
       }
-    },
-    {
-      type: 'input',
-      name: 'about',
-      message: 'Provide some information about yourself:'
     }
   ]);
 };
@@ -143,8 +138,16 @@ const promptProject = portfolioData => {
   });
 };
 
+// const pageHTML = generatePage(mockData);
+
 promptUser()
   .then(promptProject)
   .then(portfolioData => {
-    console.log(portfolioData);
+    const pageHTML = generatePage(portfolioData);
+
+    fs.writeFile('./index.html', pageHTML, err => {
+      if (err) throw new Error(err);
+
+      console.log('Page created! Check out index.html in this directory to see it!');
+    });
   });
